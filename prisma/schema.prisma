@@ -17,4 +17,69 @@ model User{
   email String
   avatarUrl String?
   createdAt DateTime @default(now())
+  property Property[]
 }
+model PropertyStatus{
+  id Int @id @default(autoincrement())
+  value String
+  property Property[]
+}
+
+model PropertyType{
+  id Int @id @default(autoincrement())
+  value String
+  property Property[]
+
+}
+
+model Property{
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  price Int
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+
+  statusId Int
+  propertystatus PropertyStatus @relation(fields: [statusId], references: [id]) 
+
+  typeId Int
+  propertytype PropertyType @relation(fields: [typeId], references: [id])
+
+  propertylocation PropertyLocation?
+  propertyfeature PropertyFeature?
+
+}
+
+model PropertyLocation {
+  id Int @id @default(autoincrement())
+  streetAddress String
+  city String
+  state String
+  country String
+  zip String
+  landmark String
+
+  propertyId Int @unique
+  property Property @relation(fields: [propertyId], references: [id])
+
+}
+
+model PropertyFeature{
+  
+  id Int @id @default(autoincrement())
+  bedrooms Int
+  bathrooms Int
+  parkingSpots Int
+  area Int
+  hasSwimmingPool Boolean
+  hasGardenYard Boolean
+  hasBalcony Boolean
+
+  propertyId Int @unique
+  property Property @relation(fields: [propertyId], references: [id])
+
+}
+
+
