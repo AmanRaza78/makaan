@@ -49,6 +49,8 @@ model Property{
 
   propertylocation PropertyLocation?
   propertyfeature PropertyFeature?
+  propertyimage PropertyImage[]
+  contact Contact?
 
 }
 
@@ -67,7 +69,7 @@ model PropertyLocation {
 }
 
 model PropertyFeature{
-  
+
   id Int @id @default(autoincrement())
   bedrooms Int
   bathrooms Int
@@ -82,4 +84,21 @@ model PropertyFeature{
 
 }
 
+model PropertyImage{
+  id Int @id @default(autoincrement())
+  url String
+  propertyId Int
+  property Property @relation(fields: [propertyId], references: [id])
+
+}
+
+model Contact{
+  id Int @id @default(autoincrement())
+  name String
+  phone String
+  email String
+    propertyId Int @unique
+  property Property @relation(fields: [propertyId], references: [id])
+
+}
 
