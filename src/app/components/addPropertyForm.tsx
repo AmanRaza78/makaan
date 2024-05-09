@@ -18,13 +18,17 @@ import PictureCard from "./pictureCard";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { uploadImages } from "@/lib/upload";
+import { saveProperty } from "@/lib/actions/property";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { redirect } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface Props {
   types: PropertyType[];
   status: PropertyStatus[];
 }
 
-type AddPropertyFormType = z.infer<typeof AddPropertyFormSchema>;
+export type AddPropertyFormType = z.infer<typeof AddPropertyFormSchema>;
 
 const AddPropertyForm = (props: Props) => {
   const [images, setImages] = useState<File[]>([]);
@@ -38,10 +42,24 @@ const AddPropertyForm = (props: Props) => {
     resolver: zodResolver(AddPropertyFormSchema),
   });
 
+  const { user } = useKindeBrowserClient();
+  console.log(user?.id, "hey aman user id is here")
+
   const onSubmit: SubmitHandler<AddPropertyFormType> = async (data) => {
     console.log("Hey data is here", { data });
     const imagesUrls = await uploadImages(images)
     console.log({imagesUrls})
+    console.log(user?.id, "hey user id is here")
+
+    try{
+        await saveProperty(data, imagesUrls, user?.id!)
+        toast.success("Property added successfully!")
+        redirect('/users/property/')
+    }
+    catch(error){
+        console.error({error})
+    }
+
   };
 
   return (
@@ -157,37 +175,37 @@ const AddPropertyForm = (props: Props) => {
           </CardHeader>
 
           <Input
-            {...register("propertyFeature.bedrooms", { required: true })}
-            errorMessage={errors.propertyFeature?.bedrooms?.message}
-            isInvalid={!!errors.propertyFeature?.bedrooms}
+            {...register("propertyfeature.bedrooms", { required: true })}
+            errorMessage={errors.propertyfeature?.bedrooms?.message}
+            isInvalid={!!errors.propertyfeature?.bedrooms}
             label="Bedrooms"
             className="mb-4"
           />
           <Input
-            {...register("propertyFeature.bathrooms", { required: true })}
-            errorMessage={errors.propertyFeature?.bathrooms?.message}
-            isInvalid={!!errors.propertyFeature?.bathrooms}
+            {...register("propertyfeature.bathrooms", { required: true })}
+            errorMessage={errors.propertyfeature?.bathrooms?.message}
+            isInvalid={!!errors.propertyfeature?.bathrooms}
             label="Bathrooms"
             className="mb-4"
           />
           <Input
-            {...register("propertyFeature.parkingSpots", { required: true })}
-            errorMessage={errors.propertyFeature?.parkingSpots?.message}
-            isInvalid={!!errors.propertyFeature?.parkingSpots}
+            {...register("propertyfeature.parkingSpots", { required: true })}
+            errorMessage={errors.propertyfeature?.parkingSpots?.message}
+            isInvalid={!!errors.propertyfeature?.parkingSpots}
             label="Parking Spots"
             className="mb-4"
           />
           <Input
-            {...register("propertyFeature.area", { required: true })}
-            errorMessage={errors.propertyFeature?.area?.message}
-            isInvalid={!!errors.propertyFeature?.area}
+            {...register("propertyfeature.area", { required: true })}
+            errorMessage={errors.propertyfeature?.area?.message}
+            isInvalid={!!errors.propertyfeature?.area}
             label="area"
             className="mb-4"
           />
           <div className="flex justify-between">
             <Controller
               control={control}
-              name="propertyFeature.hasSwimmingPool"
+              name="propertyfeature.hasSwimmingPool"
               render={({ field }) => (
                 <Checkbox
                   onChange={field.onChange}
@@ -200,7 +218,7 @@ const AddPropertyForm = (props: Props) => {
             />
             <Controller
               control={control}
-              name="propertyFeature.hasGardenYard"
+              name="propertyfeature.hasGardenYard"
               render={({ field }) => (
                 <Checkbox
                   onChange={field.onChange}
@@ -213,7 +231,7 @@ const AddPropertyForm = (props: Props) => {
             />
             <Controller
               control={control}
-              name="propertyFeature.hasBalcony"
+              name="propertyfeature.hasBalcony"
               render={({ field }) => (
                 <Checkbox
                   onChange={field.onChange}

@@ -16,7 +16,7 @@ export const AddPropertyFormSchema = z.object({
     landmark: z.string(),
   }),
 
-  propertyFeature: z.object({
+  propertyfeature: z.object({
     bedrooms: z.string().transform((data: unknown) => Number(data)),
     bathrooms: z.string().transform((data: unknown) => Number(data)),
     parkingSpots: z.string().transform((data: unknown) => Number(data)),
